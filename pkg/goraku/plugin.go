@@ -3,5 +3,5 @@ package goraku
 import "github.com/nlopes/slack"
 
 type Plugin interface {
-	Hear(bot *Goraku, message slack.MessageEvent)
+	Hear(bot Bot, message *slack.MessageEvent)
 }

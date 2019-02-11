@@ -18,6 +18,6 @@ func (pm *pluginManager) addPlugin(plugin Plugin) {
 
 func (pm *pluginManager) processMessageEvent(g *Goraku, event *slack.MessageEvent) {
 	for _, plugin := range pm.plugins {
-		plugin.Hear(g, *event)
+		plugin.Hear(g, event)
 	}
 }

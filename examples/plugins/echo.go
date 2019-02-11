@@ -7,7 +7,7 @@ import (
 
 type Echo struct {}
 
-func (e *Echo) Hear(bot *goraku.Goraku, message slack.MessageEvent) {
+func (e *Echo) Hear(bot goraku.Bot, message *slack.MessageEvent) {
 	bot.Reply(message, message.Text)
 }
 

@@ -7,9 +7,9 @@ import (
 
 type Bot interface {
 	// Reply to message with text.
-	Reply(message slack.MessageEvent, text string)
+	Reply(message *slack.MessageEvent, text string)
 	// Reply to message using thread, attachments, and so on.
-	ReplyWithOptions(message slack.MessageEvent, options ...slack.MsgOption) error
+	ReplyWithOptions(message *slack.MessageEvent, options ...slack.MsgOption) error
 }
 
 type Goraku struct {
@@ -31,13 +31,13 @@ func NewSlackBot(slackApiToken string, options ...slack.Option) *Goraku {
 
 // Reply to message with text.
 // Use ReplyWIthOptions for complicated message.
-func (g *Goraku) Reply(message slack.MessageEvent, text string) {
+func (g *Goraku) Reply(message *slack.MessageEvent, text string) {
 	outgoing := g.rtm.NewOutgoingMessage(text, message.Channel)
 	g.rtm.SendMessage(outgoing)
 }
 
 // Reply to message using thread, attachments, and so on.
-func (g *Goraku) ReplyWithOptions(message slack.MessageEvent, options ...slack.MsgOption) error {
+func (g *Goraku) ReplyWithOptions(message *slack.MessageEvent, options ...slack.MsgOption) error {
 	_, _, err := g.rtm.PostMessage(message.Channel, options...)
 	return err
 }
