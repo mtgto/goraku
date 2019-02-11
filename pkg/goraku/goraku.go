@@ -10,41 +10,47 @@ type Bot interface {
 	Reply(message *slack.MessageEvent, text string)
 	// Reply to message using thread, attachments, and so on.
 	ReplyWithOptions(message *slack.MessageEvent, options ...slack.MsgOption) error
+	// Slack Web API client
+	API() *slack.Client
+	// User information of bot itself
+	Me() *slack.UserDetails
+	// Team which the bot belongs to
+	Team() *slack.Team
 }
 
-type Goraku struct {
+type goraku struct {
 	Bot
-	API           *slack.Client
-	Me            *slack.UserDetails
-	Team          *slack.Team
+	api           *slack.Client
+	me            *slack.UserDetails
+	team          *slack.Team
 	rtm           *slack.RTM
 	pluginManager *pluginManager
 }
 
-func NewSlackBot(slackApiToken string, options ...slack.Option) *Goraku {
+func NewSlackBot(slackApiToken string, options ...slack.Option) *goraku {
 	client := slack.New(slackApiToken, options...)
-	return &Goraku{
-		API:           client,
+	return &goraku{
+		api:           client,
 		pluginManager: newPluginManager(),
 	}
 }
 
 // Reply to message with text.
 // Use ReplyWIthOptions for complicated message.
-func (g *Goraku) Reply(message *slack.MessageEvent, text string) {
+func (g *goraku) Reply(message *slack.MessageEvent, text string) {
 	outgoing := g.rtm.NewOutgoingMessage(text, message.Channel)
 	g.rtm.SendMessage(outgoing)
 }
 
 // Reply to message using thread, attachments, and so on.
-func (g *Goraku) ReplyWithOptions(message *slack.MessageEvent, options ...slack.MsgOption) error {
+func (g *goraku) ReplyWithOptions(message *slack.MessageEvent, options ...slack.MsgOption) error {
 	_, _, err := g.rtm.PostMessage(message.Channel, options...)
 	return err
 }
 
 // Start RTM connection.
-func (g *Goraku) Start(options ...slack.RTMOption) {
-	g.rtm = g.API.NewRTM(options...)
+func (g *goraku) Start(options ...slack.RTMOption) {
+	g.rtm = g.api.NewRTM(options...)
 	go g.rtm.ManageConnection()
 
 	for msg := range g.rtm.IncomingEvents {
@@ -55,8 +61,8 @@ func (g *Goraku) Start(options ...slack.RTMOption) {
 		case *slack.ConnectedEvent:
 			log.Printf("Connected: %v\n", ev)
 			info := g.rtm.GetInfo()
-			g.Me = info.User
-			g.Team = info.Team
+			g.me = info.User
+			g.team = info.Team
 		case *slack.DisconnectedEvent:
 			log.Printf("Disconnected: %v\n", ev)
 			break
@@ -77,6 +83,20 @@ func (g *Goraku) Start(options ...slack.RTMOption) {
 }
 
 // Add goraku plugin to manager
-func (g *Goraku) AddPlugin(plugin Plugin) {
+func (g *goraku) AddPlugin(plugin Plugin) {
 	g.pluginManager.addPlugin(plugin)
 }
+
+func (g *goraku) API() *slack.Client {
+	return g.api
+}
+
+func (g *goraku) Me() *slack.UserDetails {
+	return g.me
+}
+
+func (g *goraku) Team() *slack.Team {
+	return g.team
+}
+
+var _ Bot = (*goraku)(nil)

@@ -16,7 +16,7 @@ func (pm *pluginManager) addPlugin(plugin Plugin) {
 	pm.plugins = append(pm.plugins, plugin)
 }
 
-func (pm *pluginManager) processMessageEvent(g *Goraku, event *slack.MessageEvent) {
+func (pm *pluginManager) processMessageEvent(g *goraku, event *slack.MessageEvent) {
 	for _, plugin := range pm.plugins {
 		plugin.Hear(g, event)
 	}
