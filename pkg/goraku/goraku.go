@@ -27,6 +27,7 @@ type goraku struct {
 	pluginManager *pluginManager
 }
 
+// NewSlackBot returns a new slack bot.
 func NewSlackBot(slackApiToken string, options ...slack.Option) *goraku {
 	client := slack.New(slackApiToken, options...)
 	return &goraku{
