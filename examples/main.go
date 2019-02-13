@@ -9,7 +9,7 @@ import (
 
 func main() {
 	var token string
-	flag.StringVar(&token, "token", os.Getenv("SLACK_BOT_TOKEN"), "SlackのBotToken")
+	flag.StringVar(&token, "token", os.Getenv("SLACK_BOT_TOKEN"), "Slack Bot's Token")
 	flag.Parse()
 
 	bot := goraku.NewSlackBot(token)

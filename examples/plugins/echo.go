@@ -5,10 +5,18 @@ import (
 	"github.com/nlopes/slack"
 )
 
-type Echo struct {}
+type Echo struct{}
 
 func (e *Echo) Hear(bot goraku.Bot, message *slack.MessageEvent) {
-	bot.Reply(message, message.Text)
+	if message.User != bot.Me().ID {
+		bot.Reply(message, message.Text)
+
+		// Reply with using attachment
+		//bot.ReplyWithOptions(message, slack.MsgOptionAsUser(true), slack.MsgOptionAttachments(slack.Attachment{
+		//	Text:     message.Text,
+		//	Fallback: message.Text,
+		//}))
+	}
 }
 
 var _ goraku.Plugin = (*Echo)(nil)

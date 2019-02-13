@@ -44,6 +44,7 @@ func (g *goraku) Reply(message *slack.MessageEvent, text string) {
 }
 
 // Reply to message using thread, attachments, and so on.
+// If you want to reply like user, Use `slack.MsgOptionAsUser(true)`.
 func (g *goraku) ReplyWithOptions(message *slack.MessageEvent, options ...slack.MsgOption) error {
 	_, _, err := g.rtm.PostMessage(message.Channel, options...)
 	return err
