@@ -39,7 +39,12 @@ func NewSlackBot(slackApiToken string, options ...slack.Option) *goraku {
 // Reply to message with text.
 // Use ReplyWIthOptions for complicated message.
 func (g *goraku) Reply(message *slack.MessageEvent, text string) {
-	outgoing := g.rtm.NewOutgoingMessage(text, message.Channel)
+	options := []slack.RTMsgOption{}
+	if len(message.ThreadTimestamp) > 0 {
+		options = []slack.RTMsgOption{slack.RTMsgOptionTS(message.ThreadTimestamp)}
+	}
+	outgoing := g.rtm.NewOutgoingMessage(text, message.Channel, options...)
+	log.Printf("ThreadTimestamp: %v", message.ThreadTimestamp)
 	g.rtm.SendMessage(outgoing)
 }
 
