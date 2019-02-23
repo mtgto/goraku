@@ -1,0 +1,8 @@
+---
+# KustomizeによるKubernetesへのデプロイ定義のサンプル
+resources:
+  - pod.yaml
+secretGenerator:
+  - name: goraku-example-secret
+    env: secret.ini
+    type: Opaque

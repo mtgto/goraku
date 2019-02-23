@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: goraku-examplepod
+  labels:
+    app: goraku-example
+spec:
+  containers:
+    - name: goraku-example
+      image: mtgto/goraku-example:latest
+      imagePullPolicy: Always
+      env:
+        - name: SLACK_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: goraku-example-secret
+              key: SLACK_BOT_TOKEN
