@@ -9,7 +9,11 @@ type Bot interface {
 	// Reply to message with text.
 	Reply(message *slack.MessageEvent, text string)
 	// Reply to message using thread, attachments, and so on.
+	// If you want to reply like user, use slack.MsgOption `slack.MsgOptionAsUser(true)`.
 	ReplyWithOptions(message *slack.MessageEvent, options ...slack.MsgOption) error
+	// Send a message to specific channel.
+	// If you want to send like user, use slack.MsgOption `slack.MsgOptionAsUser(true)`.
+	SendMessage(channelID string, options ...slack.MsgOption) error
 	// Slack Web API client
 	API() *slack.Client
 	// User information of bot itself
@@ -49,9 +53,16 @@ func (g *goraku) Reply(message *slack.MessageEvent, text string) {
 }
 
 // Reply to message using thread, attachments, and so on.
-// If you want to reply like user, Use `slack.MsgOptionAsUser(true)`.
+// If you want to reply like user, use slack.MsgOption `slack.MsgOptionAsUser(true)`.
 func (g *goraku) ReplyWithOptions(message *slack.MessageEvent, options ...slack.MsgOption) error {
 	_, _, err := g.rtm.PostMessage(message.Channel, options...)
+	return err
+}
+
+// Send a message to specific channel.
+// If you want to send like user, use slack.MsgOption `slack.MsgOptionAsUser(true)`.
+func (g *goraku) SendMessage(channelID string, options ...slack.MsgOption) error {
+	_, _, err := g.rtm.PostMessage(channelID, options...)
 	return err
 }
 
