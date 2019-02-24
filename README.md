@@ -1,5 +1,7 @@
 # goraku
 
+[![GoDoc](https://godoc.org/github.com/mtgto/goraku/pkg/goraku?status.svg)](https://godoc.org/github.com/mtgto/goraku/pkg/goraku)
+
 GoでSlackボットを書くためのフレームワーク
 
 # コンセプト
